@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 222 47% 7%;
+  --foreground: 210 40% 98%;
+
+  --card: 222 47% 10%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 222 47% 10%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 217 91% 60%;
+  --primary-foreground: 222 47% 11%;
+
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+
+  --accent: 262 83% 58%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 217 33% 18%;
+  --input: 217 33% 18%;
+  --ring: 224 76% 48%;
+
+  --radius: 0.75rem;
+}
+
+body {
+  background-color: #0b0f19;
+  color: #f1f5f9;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+    radial-gradient(at 90% 20%, rgba(168, 85, 247, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 90%, rgba(14, 165, 233, 0.06) 0px, transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(17, 24, 39, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px -5px rgba(99, 102, 241, 0.15);
+}
+
+.glass-dropdown {
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.25);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.5);
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.03) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2.5s infinite;
+}
+
+/* Print Styles for Clean Export */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
