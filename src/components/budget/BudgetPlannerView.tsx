@@ -9,6 +9,11 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { formatCurrency } from "@/lib/utils";
 import {
+  calculateBudgetTotals,
+  calculateCategoryBreakdown,
+  detectBudgetOverages,
+} from "@/lib/budget-calculator";
+import {
   Plus,
   Sliders,
   AlertTriangle,
@@ -39,39 +44,14 @@ export function BudgetPlannerView({
   const budgetItems = event.budgetItems || [];
   const totalBudget = event.totalBudget || 1;
 
-  // Aggregate values
-  const totalEstimated = budgetItems.reduce((acc, it) => acc + (it.estimatedCost || 0), 0);
-  const totalActual = budgetItems.reduce((acc, it) => acc + (it.actualCost || 0), 0);
-  const totalPaid = budgetItems.reduce((acc, it) => acc + (it.paidAmount || 0), 0);
-  const remainingBudget = totalBudget - (totalActual > 0 ? totalActual : totalEstimated);
+  // Use modular calculations
+  const { totalEstimated, totalActual, totalPaid, remainingBudget } = calculateBudgetTotals(
+    budgetItems,
+    totalBudget
+  );
 
   // Group by category for progress bars and overage calculation
-  const categoryStats = BUDGET_CATEGORIES.map((cat) => {
-    const items = budgetItems.filter((it) => it.category === cat.value);
-    const catEstimated = items.reduce((acc, it) => acc + it.estimatedCost, 0);
-    const catActual = items.reduce((acc, it) => acc + it.actualCost, 0);
-    const catPaid = items.reduce((acc, it) => acc + it.paidAmount, 0);
-
-    const isOverTarget = catEstimated > 0 && catActual > catEstimated;
-    const overagePercentage =
-      catEstimated > 0 && catActual > catEstimated
-        ? Math.round(((catActual - catEstimated) / catEstimated) * 100)
-        : 0;
-
-    const hasCriticalOverage = overagePercentage >= 15;
-
-    return {
-      ...cat,
-      items,
-      estimated: catEstimated,
-      actual: catActual,
-      paid: catPaid,
-      isOverTarget,
-      overagePercentage,
-      hasCriticalOverage,
-      percentOfTotal: totalBudget > 0 ? Math.round((catActual / totalBudget) * 100) : 0,
-    };
-  });
+  const categoryStats = calculateCategoryBreakdown(budgetItems, totalBudget, 15);
 
   // Filter items
   const filteredItems = budgetItems.filter((item) => {
@@ -83,10 +63,8 @@ export function BudgetPlannerView({
     return matchesCategory && matchesSearch;
   });
 
-  // Check any item overage > 15%
-  const globalOverageItems = budgetItems.filter(
-    (it) => it.estimatedCost > 0 && it.actualCost > it.estimatedCost * 1.15
-  );
+  // Check any item overage > 15% using modular detector
+  const globalOverageItems = detectBudgetOverages(budgetItems, 15);
 
   return (
     <div className="space-y-6">
@@ -211,12 +189,24 @@ export function BudgetPlannerView({
             return (
               <div
                 key={cat.value}
+                role="button"
+                tabIndex={0}
+                aria-pressed={budgetCategoryFilter === cat.value}
+                aria-label={`Filter by ${cat.label} category`}
                 onClick={() =>
                   setBudgetCategoryFilter(
                     budgetCategoryFilter === cat.value ? "ALL" : cat.value
                   )
                 }
-                className={`p-4 rounded-xl border transition-all cursor-pointer ${
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setBudgetCategoryFilter(
+                      budgetCategoryFilter === cat.value ? "ALL" : cat.value
+                    );
+                  }
+                }}
+                className={`p-4 rounded-xl border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-500/50 ${
                   budgetCategoryFilter === cat.value
                     ? "bg-slate-800/90 border-brand-500 shadow-md"
                     : "bg-slate-900/60 border-slate-800/90 hover:border-slate-700"
@@ -227,6 +217,7 @@ export function BudgetPlannerView({
                     <div
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: cat.color }}
+                      aria-hidden="true"
                     />
                     <span className="text-sm font-semibold text-white">
                       {cat.label}
@@ -237,15 +228,22 @@ export function BudgetPlannerView({
                   </div>
 
                   {cat.hasCriticalOverage && (
-                    <Badge variant="destructive" size="sm" className="gap-1 animate-pulse">
-                      <AlertTriangle className="w-3 h-3" />
+                    <Badge variant="destructive" size="sm" className="gap-1 animate-pulse" aria-label={`Critical overage: ${cat.overagePercentage} percent over budget`}>
+                      <AlertTriangle className="w-3 h-3" aria-hidden="true" />
                       +{cat.overagePercentage}% Over
                     </Badge>
                   )}
                 </div>
 
-                {/* Progress Bar */}
-                <div className="w-full h-2.5 rounded-full bg-slate-800 overflow-hidden my-2">
+                {/* Accessible Progress Bar */}
+                <div
+                  className="w-full h-2.5 rounded-full bg-slate-800 overflow-hidden my-2"
+                  role="progressbar"
+                  aria-label={`${cat.label} budget utilization`}
+                  aria-valuenow={progressRatio}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                >
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${
                       cat.hasCriticalOverage

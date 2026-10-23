@@ -17,8 +17,9 @@ export async function POST(
 
     const collaborator = await addCollaborator(eventId, user.id, email, role);
     return NextResponse.json({ success: true, collaborator }, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to add collaborator" }, { status: 400 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to add collaborator";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }
 
@@ -38,7 +39,8 @@ export async function DELETE(
 
     await removeCollaborator(collaboratorId, eventId, user.id);
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to remove collaborator" }, { status: 400 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to remove collaborator";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }

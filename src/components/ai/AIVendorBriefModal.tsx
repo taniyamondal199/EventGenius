@@ -73,11 +73,12 @@ export function AIVendorBriefModal({ event }: AIVendorBriefModalProps) {
         message: "Vendor RFP & Scope Generated",
         description: `Professional RFP message ready for ${category}.`,
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to generate vendor brief";
       addToast({
         type: "error",
         message: "Generation Failed",
-        description: err.message,
+        description: msg,
       });
     } finally {
       setIsLoading(false);

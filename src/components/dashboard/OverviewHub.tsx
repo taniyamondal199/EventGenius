@@ -335,7 +335,14 @@ export function OverviewHub({ event }: OverviewHubProps) {
                     </div>
                   </div>
 
-                  <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div
+                    className="w-full h-2 rounded-full bg-slate-800 overflow-hidden"
+                    role="progressbar"
+                    aria-label={`${cat.label} budget allocation`}
+                    aria-valuenow={percent}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                  >
                     <div
                       className="h-full rounded-full transition-all duration-700 ease-out"
                       style={{

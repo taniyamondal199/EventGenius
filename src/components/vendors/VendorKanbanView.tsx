@@ -175,6 +175,7 @@ export function VendorKanbanView({
                           onClick={() => openVendorModal(vendor.id)}
                           className="p-1 rounded text-slate-400 hover:text-white"
                           title="Edit vendor"
+                          aria-label={`Edit ${vendor.vendorName}`}
                         >
                           <Edit2 className="w-3 h-3" />
                         </button>
@@ -182,6 +183,7 @@ export function VendorKanbanView({
                           onClick={() => onDeleteVendor(vendor.id)}
                           className="p-1 rounded text-slate-400 hover:text-rose-400"
                           title="Delete vendor"
+                          aria-label={`Delete ${vendor.vendorName}`}
                         >
                           <Trash2 className="w-3 h-3" />
                         </button>
@@ -199,6 +201,7 @@ export function VendorKanbanView({
                       {vendor.contactEmail && (
                         <a
                           href={`mailto:${vendor.contactEmail}`}
+                          aria-label={`Email ${vendor.vendorName}`}
                           className="flex items-center gap-1.5 hover:text-brand-300 transition-colors truncate"
                         >
                           <Mail className="w-3 h-3 text-brand-400 shrink-0" />
@@ -208,6 +211,7 @@ export function VendorKanbanView({
                       {vendor.contactPhone && (
                         <a
                           href={`tel:${vendor.contactPhone}`}
+                          aria-label={`Call ${vendor.vendorName}`}
                           className="flex items-center gap-1.5 hover:text-brand-300 transition-colors"
                         >
                           <Phone className="w-3 h-3 text-emerald-400 shrink-0" />
@@ -219,6 +223,7 @@ export function VendorKanbanView({
                           href={vendor.contractUrl}
                           target="_blank"
                           rel="noreferrer"
+                          aria-label={`View agreement for ${vendor.vendorName}`}
                           className="flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 transition-colors font-medium truncate"
                         >
                           <FileText className="w-3 h-3 shrink-0" />
@@ -234,6 +239,7 @@ export function VendorKanbanView({
                         onClick={() => moveVendor(vendor, "prev")}
                         disabled={vendor.status === "RESEARCHING"}
                         title="Move back a stage"
+                        aria-label={`Move ${vendor.vendorName} back a stage`}
                         className="p-1 rounded text-slate-400 hover:text-white disabled:opacity-20 disabled:pointer-events-none"
                       >
                         <ArrowLeft className="w-3.5 h-3.5" />
@@ -241,6 +247,7 @@ export function VendorKanbanView({
 
                       <button
                         onClick={() => openVendorBriefModal(vendor.category)}
+                        aria-label={`Generate RFP brief for ${vendor.category}`}
                         className="text-[10px] text-amber-300 hover:text-amber-200 font-semibold flex items-center gap-1 transition-colors"
                       >
                         <Sparkles className="w-2.5 h-2.5" /> RFP Brief
@@ -250,6 +257,7 @@ export function VendorKanbanView({
                         onClick={() => moveVendor(vendor, "next")}
                         disabled={vendor.status === "REJECTED"}
                         title="Advance to next stage"
+                        aria-label={`Advance ${vendor.vendorName} to next stage`}
                         className="p-1 rounded text-slate-400 hover:text-white disabled:opacity-20 disabled:pointer-events-none"
                       >
                         <ArrowRight className="w-3.5 h-3.5" />

@@ -38,10 +38,11 @@ export async function POST(req: NextRequest) {
       data: analysis,
       rateLimitRemaining: rateLimit.remaining,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("AI Budget Rebalance Error:", error);
+    const message = error instanceof Error ? error.message : "Failed to analyze and rebalance budget";
     return NextResponse.json(
-      { error: error?.message || "Failed to analyze and rebalance budget" },
+      { error: message },
       { status: 500 }
     );
   }

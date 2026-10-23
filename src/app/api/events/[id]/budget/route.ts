@@ -29,8 +29,9 @@ export async function POST(
 
     const item = await addBudgetItem(eventId, user.id, parseResult.data);
     return NextResponse.json({ success: true, item }, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to add budget item" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to add budget item";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -64,8 +65,9 @@ export async function PUT(
 
     const updated = await updateBudgetItem(itemId, eventId, user.id, parseResult.data);
     return NextResponse.json({ success: true, item: updated });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to update budget item" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to update budget item";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -85,7 +87,8 @@ export async function DELETE(
 
     await deleteBudgetItem(itemId, eventId, user.id);
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to delete budget item" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to delete budget item";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

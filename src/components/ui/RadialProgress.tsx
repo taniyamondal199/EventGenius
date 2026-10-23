@@ -35,6 +35,11 @@ export function RadialProgress({
 
   return (
     <div
+      role="progressbar"
+      aria-label={label ? `${label} progress` : "Progress meter"}
+      aria-valuenow={value}
+      aria-valuemin={0}
+      aria-valuemax={100}
       className={cn(
         "relative flex flex-col items-center justify-center select-none",
         className

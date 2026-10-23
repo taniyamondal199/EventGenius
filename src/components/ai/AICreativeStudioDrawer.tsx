@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useUIStore } from "@/stores/uiStore";
 import {
   Event,
+  EventType,
   AIPlanOutput,
   BudgetItemInput,
   TimelineItemInput,
@@ -111,11 +112,12 @@ export function AICreativeStudioDrawer({
         spread: 70,
         origin: { y: 0.6 },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : "Failed to contact AI engine";
       addToast({
         type: "error",
         message: "AI Blueprint Failed",
-        description: error.message || "Failed to contact AI engine",
+        description: msg,
       });
     } finally {
       setIsGenerating(false);
@@ -139,8 +141,9 @@ export function AICreativeStudioDrawer({
         message: "Added to Budget",
         description: `${item.suggestedName} successfully added to budget.`,
       });
-    } catch (err: any) {
-      addToast({ type: "error", message: "Failed to add", description: err.message });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to add budget item";
+      addToast({ type: "error", message: "Failed to add", description: msg });
     }
   };
 
@@ -169,8 +172,9 @@ export function AICreativeStudioDrawer({
         message: "Added to Timeline",
         description: `${item.title} scheduled in ${item.phase}.`,
       });
-    } catch (err: any) {
-      addToast({ type: "error", message: "Failed to add", description: err.message });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to add timeline item";
+      addToast({ type: "error", message: "Failed to add", description: msg });
     }
   };
 
@@ -192,8 +196,9 @@ export function AICreativeStudioDrawer({
         message: "Added to Checklist",
         description: `${item.vendorRole} added to vendor research board.`,
       });
-    } catch (err: any) {
-      addToast({ type: "error", message: "Failed to add", description: err.message });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to add vendor";
+      addToast({ type: "error", message: "Failed to add", description: msg });
     }
   };
 
@@ -209,8 +214,9 @@ export function AICreativeStudioDrawer({
         message: "Saved to Ideas",
         description: `${item.title} added to your creative log.`,
       });
-    } catch (err: any) {
-      addToast({ type: "error", message: "Failed to save idea", description: err.message });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to save idea";
+      addToast({ type: "error", message: "Failed to save idea", description: msg });
     }
   };
 
@@ -226,8 +232,9 @@ export function AICreativeStudioDrawer({
         message: "Idea Logged",
         description: "Your creative note was saved to this event.",
       });
-    } catch (err: any) {
-      addToast({ type: "error", message: "Failed to log idea", description: err.message });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to log idea";
+      addToast({ type: "error", message: "Failed to log idea", description: msg });
     }
   };
 
@@ -319,7 +326,7 @@ export function AICreativeStudioDrawer({
                         </label>
                         <select
                           value={eventType}
-                          onChange={(e) => setEventType(e.target.value as any)}
+                          onChange={(e) => setEventType(e.target.value as EventType)}
                           className="w-full h-9 rounded-lg bg-slate-900 border border-slate-700 px-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-brand-500"
                         >
                           <option value="WEDDING">Wedding Celebration</option>

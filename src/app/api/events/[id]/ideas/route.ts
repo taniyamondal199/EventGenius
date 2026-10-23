@@ -19,8 +19,9 @@ export async function POST(
     const cleanContent = sanitizeInput(content);
     const idea = await addAIIdea(eventId, user.id, category, cleanContent);
     return NextResponse.json({ success: true, idea }, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to add idea" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to add idea";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -39,7 +40,8 @@ export async function PATCH(
 
     const updated = await toggleFavoriteIdea(ideaId, eventId, user.id);
     return NextResponse.json({ success: true, idea: updated });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to toggle idea favorite" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to toggle idea favorite";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

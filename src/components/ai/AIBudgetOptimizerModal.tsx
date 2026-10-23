@@ -59,11 +59,12 @@ export function AIBudgetOptimizerModal({ event }: AIBudgetOptimizerModalProps) {
         message: "Budget Analysis Complete",
         description: "AI Budget Optimizer evaluated financial health and cost trade-offs.",
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Budget analysis failed";
       addToast({
         type: "error",
         message: "Optimization Failed",
-        description: err.message,
+        description: msg,
       });
     } finally {
       setIsLoading(false);
@@ -74,6 +75,7 @@ export function AIBudgetOptimizerModal({ event }: AIBudgetOptimizerModalProps) {
     if (isRebalanceModalOpen && !analysis) {
       runOptimizer();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRebalanceModalOpen]);
 
   return (

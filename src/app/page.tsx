@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUIStore } from "@/stores/uiStore";
 import { useEventStore } from "@/stores/eventStore";
@@ -54,7 +54,7 @@ export default function HomePage() {
     },
   });
 
-  const events = eventsData?.events || [];
+  const events = useMemo(() => eventsData?.events || [], [eventsData?.events]);
 
   // Initialize selected event
   useEffect(() => {
@@ -65,10 +65,10 @@ export default function HomePage() {
 
   // 2. Fetch Single Event with Details
   const activeEventId = selectedEventId || events[0]?.id;
-  const { data: eventDetailData, isLoading: isEventDetailLoading } = useQuery<{ event: Event }>({
+  const { data: eventDetailData, isLoading: isEventDetailLoading } = useQuery<{ event: Event } | null>({
     queryKey: ["event", activeEventId],
     queryFn: async () => {
-      if (!activeEventId) return null as any;
+      if (!activeEventId) return null;
       const res = await fetch(`/api/events/${activeEventId}`);
       if (!res.ok) throw new Error("Failed to fetch event detail");
       return res.json();
@@ -108,8 +108,9 @@ export default function HomePage() {
         description: `Workspace initialized for ${data.event.title}.`,
       });
     },
-    onError: (err: any) => {
-      addToast({ type: "error", message: "Creation Failed", description: err.message });
+    onError: (err: unknown) => {
+      const msg = err instanceof Error ? err.message : "Creation Failed";
+      addToast({ type: "error", message: "Creation Failed", description: msg });
     },
   });
 
@@ -135,8 +136,9 @@ export default function HomePage() {
         description: "Financial allocations updated.",
       });
     },
-    onError: (err: any) => {
-      addToast({ type: "error", message: "Save Failed", description: err.message });
+    onError: (err: unknown) => {
+      const msg = err instanceof Error ? err.message : "Save Failed";
+      addToast({ type: "error", message: "Save Failed", description: msg });
     },
   });
 
@@ -154,8 +156,9 @@ export default function HomePage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["event", activeEvent?.id] });
     },
-    onError: (err: any) => {
-      addToast({ type: "error", message: "Update Failed", description: err.message });
+    onError: (err: unknown) => {
+      const msg = err instanceof Error ? err.message : "Update Failed";
+      addToast({ type: "error", message: "Update Failed", description: msg });
     },
   });
 
@@ -196,8 +199,9 @@ export default function HomePage() {
         description: "Itinerary schedule synchronized.",
       });
     },
-    onError: (err: any) => {
-      addToast({ type: "error", message: "Save Failed", description: err.message });
+    onError: (err: unknown) => {
+      const msg = err instanceof Error ? err.message : "Save Failed";
+      addToast({ type: "error", message: "Save Failed", description: msg });
     },
   });
 
@@ -253,8 +257,9 @@ export default function HomePage() {
         description: "Directory records updated.",
       });
     },
-    onError: (err: any) => {
-      addToast({ type: "error", message: "Save Failed", description: err.message });
+    onError: (err: unknown) => {
+      const msg = err instanceof Error ? err.message : "Save Failed";
+      addToast({ type: "error", message: "Save Failed", description: msg });
     },
   });
 

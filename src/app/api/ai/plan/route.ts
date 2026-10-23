@@ -54,10 +54,11 @@ export async function POST(req: NextRequest) {
       data: blueprint,
       rateLimitRemaining: rateLimit.remaining,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("AI Plan Route Error:", error);
+    const message = error instanceof Error ? error.message : "Failed to generate AI event plan";
     return NextResponse.json(
-      { error: error?.message || "Failed to generate AI event plan" },
+      { error: message },
       { status: 500 }
     );
   }

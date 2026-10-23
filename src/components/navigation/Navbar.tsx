@@ -87,6 +87,9 @@ export function Navbar({
             <div className="relative">
               <button
                 onClick={() => setIsEventDropdownOpen(!isEventDropdownOpen)}
+                aria-haspopup="true"
+                aria-expanded={isEventDropdownOpen}
+                aria-label="Switch active event workspace"
                 className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-xs font-semibold text-slate-200 hover:border-slate-600 transition-all max-w-[190px] sm:max-w-[240px]"
               >
                 <span className="truncate">
@@ -153,10 +156,12 @@ export function Navbar({
           </div>
 
           {/* Center: Main View Navigation Pills */}
-          <nav className="hidden md:flex items-center gap-1 p-1 rounded-2xl bg-slate-900/60 border border-slate-800/80">
+          <nav className="hidden md:flex items-center gap-1 p-1 rounded-2xl bg-slate-900/60 border border-slate-800/80" role="tablist" aria-label="Event Dashboard Tabs">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
+                role="tab"
+                aria-selected={activeTab === tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === tab.id
@@ -176,6 +181,7 @@ export function Navbar({
               variant="luxury"
               size="sm"
               onClick={() => setAICreativeDrawerOpen(true)}
+              aria-label="Open AI Creative Studio"
               className="hidden sm:inline-flex text-xs h-9 px-3.5"
             >
               <Sparkles className="w-3.5 h-3.5 mr-1.5 text-amber-300 animate-spin-slow" />
@@ -186,6 +192,7 @@ export function Navbar({
               variant="outline"
               size="sm"
               onClick={() => setCreateEventModalOpen(true)}
+              aria-label="Create New Event Workspace"
               className="text-xs h-9 px-3"
             >
               <Plus className="w-3.5 h-3.5 sm:mr-1" />

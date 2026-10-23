@@ -61,6 +61,10 @@ export function Modal({
 
           {/* Modal Content */}
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-dialog-title"
+            aria-describedby={description ? "modal-dialog-description" : undefined}
             initial={{ opacity: 0, scale: 0.95, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -73,9 +77,9 @@ export function Modal({
             {/* Header */}
             <div className="flex items-start justify-between pb-4 border-b border-slate-800 shrink-0">
               <div>
-                <h2 className="text-xl font-bold tracking-tight text-white">{title}</h2>
+                <h2 id="modal-dialog-title" className="text-xl font-bold tracking-tight text-white">{title}</h2>
                 {description && (
-                  <p className="text-xs text-slate-400 mt-1">{description}</p>
+                  <p id="modal-dialog-description" className="text-xs text-slate-400 mt-1">{description}</p>
                 )}
               </div>
               <button

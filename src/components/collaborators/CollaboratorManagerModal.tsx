@@ -42,11 +42,12 @@ export function CollaboratorManagerModal({
         message: "Collaborator Added",
         description: `${email} has been granted ${role} permissions.`,
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Invite failed";
       addToast({
         type: "error",
         message: "Invite Failed",
-        description: err.message,
+        description: msg,
       });
     } finally {
       setIsSubmitting(false);
@@ -61,11 +62,12 @@ export function CollaboratorManagerModal({
         message: "Collaborator Removed",
         description: "Access has been revoked.",
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Remove failed";
       addToast({
         type: "error",
         message: "Remove Failed",
-        description: err.message,
+        description: msg,
       });
     }
   };

@@ -23,8 +23,9 @@ export async function GET(
     }
 
     return NextResponse.json({ event });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to fetch event" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to fetch event";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -59,8 +60,9 @@ export async function PUT(
 
     const updated = await updateEvent(id, user.id, parseResult.data);
     return NextResponse.json({ success: true, event: updated });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to update event" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to update event";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -79,7 +81,8 @@ export async function DELETE(
 
     await deleteEvent(id, user.id);
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to delete event" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to delete event";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

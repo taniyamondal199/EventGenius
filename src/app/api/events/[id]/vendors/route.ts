@@ -30,8 +30,9 @@ export async function POST(
 
     const vendor = await addVendorItem(eventId, user.id, parseResult.data);
     return NextResponse.json({ success: true, vendor }, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to add vendor" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to add vendor";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -66,8 +67,9 @@ export async function PUT(
 
     const updated = await updateVendorItem(vendorId, eventId, user.id, parseResult.data);
     return NextResponse.json({ success: true, vendor: updated });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to update vendor" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to update vendor";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -87,7 +89,8 @@ export async function DELETE(
 
     await deleteVendorItem(vendorId, eventId, user.id);
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to delete vendor" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to delete vendor";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

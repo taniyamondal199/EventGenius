@@ -9,8 +9,9 @@ export async function GET() {
     const user = await getCurrentUser();
     const events = await getUserEvents(user.id);
     return NextResponse.json({ events });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to fetch events" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to fetch events";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -36,7 +37,8 @@ export async function POST(req: NextRequest) {
 
     const event = await createEvent(user.id, parseResult.data);
     return NextResponse.json({ success: true, event }, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to create event" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to create event";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

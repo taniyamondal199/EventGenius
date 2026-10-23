@@ -55,10 +55,11 @@ export async function POST(req: NextRequest) {
       data: brief,
       rateLimitRemaining: rateLimit.remaining,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("AI Vendor Brief Error:", error);
+    const message = error instanceof Error ? error.message : "Failed to generate vendor brief and RFP";
     return NextResponse.json(
-      { error: error?.message || "Failed to generate vendor brief and RFP" },
+      { error: message },
       { status: 500 }
     );
   }

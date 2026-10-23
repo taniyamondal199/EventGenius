@@ -99,3 +99,10 @@ export async function checkRateLimit(
     resetInSeconds: windowSeconds,
   };
 }
+
+/**
+ * Resets the in-memory rate limit store (useful for testing and deterministic cache invalidation).
+ */
+export function resetRateLimitStore(): void {
+  inMemoryStore.clear();
+}
